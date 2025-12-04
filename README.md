@@ -38,8 +38,7 @@ The robotics benchmark consists of 5 manipulation tasks:
 - **G4 Projectile Arc** – Launcher fires projectile trajectory
 
 ### Models Compared
-- ✅ **Grok**, **Sora2**, **Veo2**, **Veo3**
-- ⚠️ **Wan2.1** (all tasks except Springs currently available)
+- ✅ **Grok**, **Sora2**, **Veo2**, **Veo3**, **Wan2.1**
 
 ## 📁 Project Structure
 
