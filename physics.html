@@ -97,6 +97,85 @@
             color: #4a5568;
         }
 
+        .ratio-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            font-size: 0.95em;
+        }
+
+        .ratio-table th,
+        .ratio-table td {
+            padding: 12px 15px;
+            text-align: center;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .ratio-table th {
+            background: #f1f5f9;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .ratio-table tbody tr:hover {
+            background: #f8fafc;
+        }
+
+        .ratio-table td:first-child {
+            font-weight: 600;
+            text-align: left;
+        }
+
+        .accuracy-low {
+            color: #dc2626;
+            font-weight: 600;
+        }
+
+        .accuracy-mid {
+            color: #f59e0b;
+            font-weight: 600;
+        }
+
+        .accuracy-high {
+            color: #10b981;
+            font-weight: 600;
+        }
+
+        .table-note {
+            margin-top: 12px;
+            font-size: 0.85em;
+            color: #64748b;
+            font-style: italic;
+        }
+
+        .video-cell {
+            position: relative;
+        }
+
+        .analysis-link {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: rgba(102, 126, 234, 0.9);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.75em;
+            font-weight: 600;
+            text-decoration: none;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            z-index: 10;
+        }
+
+        .video-cell:hover .analysis-link {
+            opacity: 1;
+        }
+
+        .analysis-link:hover {
+            background: rgba(90, 103, 216, 1);
+        }
+
         .comparison-grid {
             display: grid;
             grid-template-columns: 220px repeat(5, 1fr);
@@ -253,6 +332,7 @@
             <nav class="page-links" aria-label="Benchmark pages">
                 <a class="page-link" href="index.html">Robotics Tasks</a>
                 <a class="page-link active" href="physics.html">Physics Tasks</a>
+                <a class="page-link" href="analysis.html">Analysis Plots</a>
             </nav>
             <h1>⚛️ Physics Video Model Comparison</h1>
             <p class="subtitle">CSCE 689 - Evaluating AI Video Models on Analytical Physics Prompts</p>
@@ -280,6 +360,7 @@
                     <button class="task-play-button" type="button" data-task="B1">Play task</button>
                 </div>
                 <div class="video-cell">
+                    <a class="analysis-link" href="detail.html?video=B1_HeavySink_Grok" target="_blank">📊</a>
                     <div class="video-container">
                         <video data-task="B1" preload="metadata" playsinline muted>
                             <source src="Physics/Grok/B1_Grok.mp4" type="video/mp4">
@@ -288,6 +369,7 @@
                     <div class="model-name">Grok</div>
                 </div>
                 <div class="video-cell">
+                    <a class="analysis-link" href="detail.html?video=B1_HeavySink_Sora2" target="_blank">📊</a>
                     <div class="video-container">
                         <video data-task="B1" preload="metadata" playsinline muted>
                             <source src="Physics/Sora2/B1_HeavySink_Sora2.mp4" type="video/mp4">
@@ -296,6 +378,7 @@
                     <div class="model-name">Sora2</div>
                 </div>
                 <div class="video-cell">
+                    <a class="analysis-link" href="detail.html?video=B1_HeavySink_Veo2" target="_blank">📊</a>
                     <div class="video-container">
                         <video data-task="B1" preload="metadata" playsinline muted>
                             <source src="Physics/Veo2/B1_HeavySink_Veo2.mp4" type="video/mp4">
@@ -304,6 +387,7 @@
                     <div class="model-name">Veo2</div>
                 </div>
                 <div class="video-cell">
+                    <a class="analysis-link" href="detail.html?video=B1_HeavySink_Veo3" target="_blank">📊</a>
                     <div class="video-container">
                         <video data-task="B1" preload="metadata" playsinline muted>
                             <source src="Physics/Veo3/B1_HeavySink_Veo3.mp4" type="video/mp4">
@@ -312,6 +396,7 @@
                     <div class="model-name">Veo3</div>
                 </div>
                 <div class="video-cell">
+                    <a class="analysis-link" href="detail.html?video=B1_HeavySink_Wan2.1" target="_blank">📊</a>
                     <div class="video-container">
                         <video data-task="B1" preload="metadata" playsinline muted>
                             <source src="Physics/Wan2.1/B1_HeavySink_Wan2.1.mp4" type="video/mp4">
@@ -329,6 +414,7 @@
                     <button class="task-play-button" type="button" data-task="B2">Play task</button>
                 </div>
                 <div class="video-cell">
+                    <a class="analysis-link" href="detail.html?video=B2_LightFloat_Grok" target="_blank">📊</a>
                     <div class="video-container">
                         <video data-task="B2" preload="metadata" playsinline muted>
                             <source src="Physics/Grok/B2_Grok.mp4" type="video/mp4">
@@ -337,6 +423,7 @@
                     <div class="model-name">Grok</div>
                 </div>
                 <div class="video-cell">
+                    <a class="analysis-link" href="detail.html?video=B2_LightFloat_Sora2" target="_blank">📊</a>
                     <div class="video-container">
                         <video data-task="B2" preload="metadata" playsinline muted>
                             <source src="Physics/Sora2/B2_LightFloat_Sora2.mp4" type="video/mp4">
@@ -345,6 +432,7 @@
                     <div class="model-name">Sora2</div>
                 </div>
                 <div class="video-cell">
+                    <a class="analysis-link" href="detail.html?video=B2_LightFloat_Veo2" target="_blank">📊</a>
                     <div class="video-container">
                         <video data-task="B2" preload="metadata" playsinline muted>
                             <source src="Physics/Veo2/B2_LightFloat_Veo2.mp4" type="video/mp4">
@@ -353,6 +441,7 @@
                     <div class="model-name">Veo2</div>
                 </div>
                 <div class="video-cell">
+                    <a class="analysis-link" href="detail.html?video=B2_LightFloat_Veo3" target="_blank">📊</a>
                     <div class="video-container">
                         <video data-task="B2" preload="metadata" playsinline muted>
                             <source src="Physics/Veo3/B2_LightFloat_Veo3.mp4" type="video/mp4">
@@ -361,6 +450,7 @@
                     <div class="model-name">Veo3</div>
                 </div>
                 <div class="video-cell">
+                    <a class="analysis-link" href="detail.html?video=B2_LightFloat_Wan2.1" target="_blank">📊</a>
                     <div class="video-container">
                         <video data-task="B2" preload="metadata" playsinline muted>
                             <source src="Physics/Wan2.1/B2_LightFloat_Wan2.1.mp4" type="video/mp4">
@@ -378,6 +468,7 @@
                     <button class="task-play-button" type="button" data-task="B3">Play task</button>
                 </div>
                 <div class="video-cell">
+                    <a class="analysis-link" href="detail.html?video=B3_PopUp_Grok" target="_blank">📊</a>
                     <div class="video-container">
                         <video data-task="B3" preload="metadata" playsinline muted>
                             <source src="Physics/Grok/B3_Grok.mp4" type="video/mp4">
@@ -386,6 +477,7 @@
                     <div class="model-name">Grok</div>
                 </div>
                 <div class="video-cell">
+                    <a class="analysis-link" href="detail.html?video=B3_PopUp_Sora2" target="_blank">📊</a>
                     <div class="video-container">
                         <video data-task="B3" preload="metadata" playsinline muted>
                             <source src="Physics/Sora2/B3_PopUp_Sora2.mp4" type="video/mp4">
@@ -394,6 +486,7 @@
                     <div class="model-name">Sora2</div>
                 </div>
                 <div class="video-cell">
+                    <a class="analysis-link" href="detail.html?video=B3_PopUp_Veo2" target="_blank">📊</a>
                     <div class="video-container">
                         <video data-task="B3" preload="metadata" playsinline muted>
                             <source src="Physics/Veo2/B3_PopUp_Veo2.mp4" type="video/mp4">
@@ -402,6 +495,7 @@
                     <div class="model-name">Veo2</div>
                 </div>
                 <div class="video-cell">
+                    <a class="analysis-link" href="detail.html?video=B3_PopUp_Veo3" target="_blank">📊</a>
                     <div class="video-container">
                         <video data-task="B3" preload="metadata" playsinline muted>
                             <source src="Physics/Veo3/B3_PopUp_Veo3.mp4" type="video/mp4">
@@ -410,6 +504,7 @@
                     <div class="model-name">Veo3</div>
                 </div>
                 <div class="video-cell">
+                    <a class="analysis-link" href="detail.html?video=B3_PopUp_Wan2.1" target="_blank">📊</a>
                     <div class="video-container">
                         <video data-task="B3" preload="metadata" playsinline muted>
                             <source src="Physics/Wan2.1/B3_PopUp_Wan2.1.mp4" type="video/mp4">
@@ -653,6 +748,7 @@
                     <button class="task-play-button" type="button" data-task="G1">Play task</button>
                 </div>
                 <div class="video-cell">
+                    <a class="analysis-link" href="detail.html?video=G1_EarthFall_Grok" target="_blank">📊</a>
                     <div class="video-container">
                         <video data-task="G1" preload="metadata" playsinline muted>
                             <source src="Physics/Grok/G1_Grok.mp4" type="video/mp4">
@@ -661,6 +757,7 @@
                     <div class="model-name">Grok</div>
                 </div>
                 <div class="video-cell">
+                    <a class="analysis-link" href="detail.html?video=G1_EarthFall_Sora2" target="_blank">📊</a>
                     <div class="video-container">
                         <video data-task="G1" preload="metadata" playsinline muted>
                             <source src="Physics/Sora2/G1_EarthFall_Sora2.mp4" type="video/mp4">
@@ -669,6 +766,7 @@
                     <div class="model-name">Sora2</div>
                 </div>
                 <div class="video-cell">
+                    <a class="analysis-link" href="detail.html?video=G1_EarthFall_Veo2" target="_blank">📊</a>
                     <div class="video-container">
                         <video data-task="G1" preload="metadata" playsinline muted>
                             <source src="Physics/Veo2/G1_EarthFall_Veo2.mp4" type="video/mp4">
@@ -677,6 +775,7 @@
                     <div class="model-name">Veo2</div>
                 </div>
                 <div class="video-cell">
+                    <a class="analysis-link" href="detail.html?video=G1_EarthFall_Veo3" target="_blank">📊</a>
                     <div class="video-container">
                         <video data-task="G1" preload="metadata" playsinline muted>
                             <source src="Physics/Veo3/G1_EarthFall_Veo3.mp4" type="video/mp4">
@@ -685,6 +784,7 @@
                     <div class="model-name">Veo3</div>
                 </div>
                 <div class="video-cell">
+                    <a class="analysis-link" href="detail.html?video=G1_EarthFall_Wan2.1" target="_blank">📊</a>
                     <div class="video-container">
                         <video data-task="G1" preload="metadata" playsinline muted>
                             <source src="Physics/Wan2.1/G1_EarthFall_Wan2.1.mp4" type="video/mp4">
@@ -702,6 +802,7 @@
                     <button class="task-play-button" type="button" data-task="G2">Play task</button>
                 </div>
                 <div class="video-cell">
+                    <a class="analysis-link" href="detail.html?video=G2_MoonFall_Grok" target="_blank">📊</a>
                     <div class="video-container">
                         <video data-task="G2" preload="metadata" playsinline muted>
                             <source src="Physics/Grok/G2_Grok.mp4" type="video/mp4">
@@ -710,6 +811,7 @@
                     <div class="model-name">Grok</div>
                 </div>
                 <div class="video-cell">
+                    <a class="analysis-link" href="detail.html?video=G2_MoonFall_Sora2" target="_blank">📊</a>
                     <div class="video-container">
                         <video data-task="G2" preload="metadata" playsinline muted>
                             <source src="Physics/Sora2/G2_MoonFall_Sora2.mp4" type="video/mp4">
@@ -718,6 +820,7 @@
                     <div class="model-name">Sora2</div>
                 </div>
                 <div class="video-cell">
+                    <a class="analysis-link" href="detail.html?video=G2_MoonFall_Veo2" target="_blank">📊</a>
                     <div class="video-container">
                         <video data-task="G2" preload="metadata" playsinline muted>
                             <source src="Physics/Veo2/G2_MoonFall_Veo2.mp4" type="video/mp4">
@@ -726,6 +829,7 @@
                     <div class="model-name">Veo2</div>
                 </div>
                 <div class="video-cell">
+                    <a class="analysis-link" href="detail.html?video=G2_MoonFall_Veo3" target="_blank">📊</a>
                     <div class="video-container">
                         <video data-task="G2" preload="metadata" playsinline muted>
                             <source src="Physics/Veo3/G2_MoonFall_Veo3.mp4" type="video/mp4">
@@ -734,6 +838,7 @@
                     <div class="model-name">Veo3</div>
                 </div>
                 <div class="video-cell">
+                    <a class="analysis-link" href="detail.html?video=G2_MoonFall_Wan2.1" target="_blank">📊</a>
                     <div class="video-container">
                         <video data-task="G2" preload="metadata" playsinline muted>
                             <source src="Physics/Wan2.1/G2_MoonFall_Wan2.1.mp4" type="video/mp4">
@@ -840,6 +945,69 @@
                     <div class="model-name">Wan2.1</div>
                 </div>
             </div>
+        </div>
+
+        <!-- Earth/Moon Gravity Ratio Analysis -->
+        <div class="category-section" id="gravity-analysis">
+            <div class="category-title">
+                <span class="category-label">Gravity Analysis Results</span>
+                <p class="category-description">Comparing measured Earth/Moon gravity ratios. Expected ratio ≈ 6.05 (Earth: 9.8 m/s² ÷ Moon: 1.62 m/s²)</p>
+            </div>
+            <table class="ratio-table">
+                <thead>
+                    <tr>
+                        <th>Model</th>
+                        <th>G1 Earth Accel (px/s²)</th>
+                        <th>G2 Moon Accel (px/s²)</th>
+                        <th>Actual Ratio</th>
+                        <th>Expected Ratio</th>
+                        <th>Accuracy</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Grok</td>
+                        <td>334.42</td>
+                        <td>248.79</td>
+                        <td>1.34</td>
+                        <td>6.05</td>
+                        <td class="accuracy-low">22%</td>
+                    </tr>
+                    <tr>
+                        <td>Sora2</td>
+                        <td>160.54</td>
+                        <td>192.34</td>
+                        <td>0.83</td>
+                        <td>6.05</td>
+                        <td class="accuracy-low">14%</td>
+                    </tr>
+                    <tr>
+                        <td>Veo2</td>
+                        <td>200.34</td>
+                        <td>63.68</td>
+                        <td>3.15</td>
+                        <td>6.05</td>
+                        <td class="accuracy-mid">52%</td>
+                    </tr>
+                    <tr>
+                        <td>Veo3</td>
+                        <td>5.16</td>
+                        <td>35.72</td>
+                        <td>0.14</td>
+                        <td>6.05</td>
+                        <td class="accuracy-low">2%</td>
+                    </tr>
+                    <tr>
+                        <td>Wan2.1</td>
+                        <td>5.52</td>
+                        <td>77.75</td>
+                        <td>0.07</td>
+                        <td>6.05</td>
+                        <td class="accuracy-low">1%</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="table-note">Accuracy = (Actual Ratio / Expected Ratio) × 100, capped at 100%. Higher values indicate better physics modeling.</p>
         </div>
 
     </div>
