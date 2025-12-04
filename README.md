@@ -19,8 +19,7 @@ The robotics benchmark consists of 5 manipulation tasks:
 5. **T5: Push cube to target marker** - Robot arm pushes cube to marked location
 
 ### Models Compared
-- ✅ **Grok**, **Veo2**, **Veo3.1Fast**, **Veo3.1Quality**, **Wan**
-- ⏳ Pending additions: **Sora**, **Cosmos**
+**Grok**, **Sora**, **Veo2**, **Veo3.1Fast**, **Veo3.1Quality**, **Wan2.1**
 
 ## ⚛️ Physics Tasks
 
@@ -38,7 +37,7 @@ The robotics benchmark consists of 5 manipulation tasks:
 - **G4 Projectile Arc** – Launcher fires projectile trajectory
 
 ### Models Compared
-- ✅ **Grok**, **Sora2**, **Veo2**, **Veo3**, **Wan2.1**
+**Grok**, **Sora2**, **Veo2**, **Veo3**, **Wan2.1**
 
 ## 📁 Project Structure
 
