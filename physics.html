@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Physics Video Model Comparison - CSCE 689</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: #1f2a37;
+            line-height: 1.6;
+            padding-bottom: 40px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: white;
+        }
+
+        h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .page-links {
+            display: inline-flex;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+
+        .page-link {
+            padding: 6px 16px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95em;
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+
+        .page-link:hover {
+            background: rgba(255, 255, 255, 0.18);
+        }
+
+        .page-link.active {
+            background: rgba(255, 255, 255, 0.25);
+            color: #fff;
+        }
+
+        .legend, .category-section, .task-descriptions {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 25px;
+        }
+
+        .legend h2 {
+            margin-bottom: 12px;
+        }
+
+        .legend a {
+            color: #11998e;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .legend a:hover {
+            text-decoration: underline;
+        }
+
+        .status-indicators {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 999px;
+            font-weight: 600;
+        }
+
+        .completed { background: #d4edda; color: #155724; }
+        .partial { background: #fff3cd; color: #856404; }
+
+        .category-title {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-bottom: 15px;
+        }
+
+        .category-label {
+            width: fit-content;
+            padding: 4px 14px;
+            border-radius: 999px;
+            font-weight: 600;
+            font-size: 0.9em;
+            background: rgba(17, 153, 142, 0.15);
+            color: #0f766e;
+        }
+
+        .category-description {
+            color: #4a5568;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 220px repeat(5, 1fr);
+            gap: 18px;
+            margin-bottom: 10px;
+        }
+
+        .task-header, .model-header, .video-cell {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(17, 25, 40, 0.08);
+        }
+
+        .model-header {
+            padding: 15px;
+            text-align: center;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+
+        .task-header {
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            position: relative;
+        }
+
+        .task-label {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .task-code {
+            font-size: 0.9em;
+            font-weight: 700;
+            color: #0f766e;
+        }
+
+        .task-name {
+            font-size: 1.05em;
+            font-weight: 700;
+            color: #1f2937;
+        }
+
+        .task-description {
+            font-size: 0.9em;
+            color: #4b5563;
+        }
+
+        .task-play-button {
+            width: fit-content;
+            padding: 7px 16px;
+            border: none;
+            border-radius: 999px;
+            background: #11998e;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s ease, transform 0.2s ease;
+            box-shadow: 0 4px 12px rgba(17, 153, 142, 0.35);
+        }
+
+        .task-play-button:hover {
+            background: #0f877c;
+            transform: translateY(-1px);
+        }
+
+        .video-cell {
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .video-cell:hover {
+            transform: translateY(-4px);
+        }
+
+        .video-container {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background: #f8f9fa;
+        }
+
+        .video-container video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .video-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: repeating-linear-gradient(
+                45deg,
+                #f8fafc,
+                #f8fafc 10px,
+                #e2e8f0 10px,
+                #e2e8f0 20px
+            );
+            border-radius: 8px;
+            color: #6c757d;
+            font-weight: 700;
+        }
+
+        .model-name {
+            padding: 10px;
+            text-align: center;
+            background: #f8fafc;
+            border-top: 1px solid #e2e8f0;
+            font-weight: 600;
+        }
+
+        .task-descriptions .task-item {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .task-descriptions .task-item:last-child {
+            margin-bottom: 0;
+            border-bottom: none;
+        }
+
+        .task-title {
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .task-meta {
+            font-size: 0.9em;
+            color: #475569;
+        }
+
+        @media (max-width: 1200px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .model-header {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <nav class="page-links" aria-label="Benchmark pages">
+                <a class="page-link" href="index.html">Robotics Tasks</a>
+                <a class="page-link active" href="physics.html">Physics Tasks</a>
+            </nav>
+            <h1>⚛️ Physics Video Model Comparison</h1>
+            <p class="subtitle">CSCE 689 - Evaluating AI Video Models on Analytical Physics Prompts</p>
+        </header>
+
+        <div class="legend">
+            <h2>📊 Model Status Overview</h2>
+            <div class="status-indicators">
+                <div class="status-item completed">
+                    <span>✅</span>
+                    <span>Completed: Grok, Sora2, Veo2, Veo3</span>
+                </div>
+                <div class="status-item partial">
+                    <span>⚠️</span>
+                    <span>In progress: Wan2.1 (missing Springs task)</span>
+                </div>
+            </div>
+            <p>Task prompts and base-image instructions: <a href="Physics/Prompts.csv">Physics/Prompts.csv</a></p>
+        </div>
+
+        <div class="category-section" id="buoyancy">
+            <div class="category-title">
+                <span class="category-label">Buoyancy Experiments</span>
+                <p class="category-description">Testing whether models capture sinking, floating, and buoyant pop-up behavior inside a water tank.</p>
+            </div>
+            <div class="comparison-grid">
+                <div class="task-header">Task</div>
+                <div class="model-header">Grok</div>
+                <div class="model-header">Sora2</div>
+                <div class="model-header">Veo2</div>
+                <div class="model-header">Veo3</div>
+                <div class="model-header">Wan2.1</div>
+
+                <div class="task-header" data-task="B1">
+                    <div class="task-label">
+                        <span class="task-code">B1</span>
+                        <span class="task-name">Heavy Sink</span>
+                    </div>
+                    <p class="task-description">Side view of a clear tank. A solid steel ball drops into water and sinks rapidly.</p>
+                    <button class="task-play-button" type="button" data-task="B1">Play task</button>
+                </div>
+                <div class="video-cell">
+                    <div class="video-container">
+                        <video data-task="B1" preload="metadata" playsinline muted>
+                            <source src="Physics/Grok/B1_Grok.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="model-name">Grok</div>
+                </div>
+                <div class="video-cell">
+                    <div class="video-container">
+                        <video data-task="B1" preload="metadata" playsinline muted>
+                            <source src="Physics/Sora2/B1_HeavySink_Sora2.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="model-name">Sora2</div>
+                </div>
+                <div class="video-cell">
+                    <div class="video-container">
+                        <video data-task="B1" preload="metadata" playsinline muted>
+                            <source src="Physics/Veo2/B1_HeavySink_Veo2.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="model-name">Veo2</div>
+                </div>
+                <div class="video-cell">
+                    <div class="video-container">
+                        <video data-task="B1" preload="metadata" playsinline muted>
+                            <source src="Physics/Veo3/B1_HeavySink_Veo3.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="model-name">Veo3</div>
+                </div>
+                <div class="video-cell">
+                    <div class="video-container">
+                        <video data-task="B1" preload="metadata" playsinline muted>
+                            <source src="Physics/Wan2.1/B1_HeavySink_Wan2.1.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="model-name">Wan2.1</div>
+                </div>
+
+                <div class="task-header" data-task="B2">
+                    <div class="task-label">
+                        <span class="task-code">B2</span>
+                        <span class="task-name">Light Float</span>
+                    </div>
+                    <p class="task-description">The metal ball becomes a hollow plastic ball that floats back to the surface.</p>
+                    <button class="task-play-button" type="button" data-task="B2">Play task</button>
+                </div>
+                <div class="video-cell">
+                    <div class="video-container">
+                        <video data-task="B2" preload="metadata" playsinline muted>
+                            <source src="Physics/Grok/B2_Grok.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="model-name">Grok</div>
+                </div>
+                <div class="video-cell">
+                    <div class="video-container">
+                        <video data-task="B2" preload="metadata" playsinline muted>
+                            <source src="Physics/Sora2/B2_LightFloat_Sora2.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="model-name">Sora2</div>
+                </div>
+                <div class="video-cell">
+                    <div class="video-container">
+                        <video data-task="B2" preload="metadata" playsinline muted>
+                            <source src="Physics/Veo2/B2_LightFloat_Veo2.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="model-name">Veo2</div>
+                </div>
+                <div class="video-cell">
+                    <div class="video-container">
+                        <video data-task="B2" preload="metadata" playsinline muted>
+                            <source src="Physics/Veo3/B2_LightFloat_Veo3.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="model-name">Veo3</div>
+                </div>
+                <div class="video-cell">
+                    <div class="video-container">
+                        <video data-task="B2" preload="metadata" playsinline muted>
+                            <source src="Physics/Wan2.1/B2_LightFloat_Wan2.1.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="model-name">Wan2.1</div>
+                </div>
+
+                <div class="task-header" data-task="B3">
+                    <div class="task-label">
+                        <span class="task-code">B3</span>
+                        <span class="task-name">Pop-up</span>
+                    </div>
+                    <p class="task-description">A submerged wooden block is released and shoots upward due to buoyant force.</p>
+                    <button class="task-play-button" type="button" data-task="B3">Play task</button>
+                </div>
+                <div class="video-cell">
+                    <div class="video-container">
+                        <video data-task="B3" preload="metadata" playsinline muted>
+                            <source src="Physics/Grok/B3_Grok.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="model-name">Grok</div>
+                </div>
+                <div class="video-cell">
+                    <div class="video-container">
+                        <video data-task="B3" preload="metadata" playsinline muted>
+                            <source src="Physics/Sora2/B3_PopUp_Sora2.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="model-name">Sora2</div>
+                </div>
+                <div class="video-cell">
+                    <div class="video-container">
+                        <video data-task="B3" preload="metadata" playsinline muted>
+                            <source src="Physics/Veo2/B3_PopUp_Veo2.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="model-name">Veo2</div>
+                </div>
+                <div class="video-cell">
+                    <div class="video-container">
+                        <video data-task="B3" preload="metadata" playsinline muted>
+                            <source src="Physics/Veo3/B3_PopUp_Veo3.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="model-name">Veo3</div>
+                </div>
+                <div class="video-cell">
+                    <div class="video-container">
+                        <video data-task="B3" preload="metadata" playsinline muted>
+                            <source src="Physics/Wan2.1/B3_PopUp_Wan2.1.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="model-name">Wan2.1</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="category-section" id="collisions">
+            <div class="category-title">
+                <span class="category-label">Collision Dynamics</span>
+                <p class="category-description">Examining how well models respect conservation principles during impacts and rolling contact.</p>
+            </div>
+            <div class="comparison-grid">
+                <div class="task-header">Task</div>
+                <div class="model-header">Grok</div>
+                <div class="model-header">Sora2</div>
+                <div class="model-header">Veo2</div>
+                <div class="model-header">Veo3</div>
+                <div class="model-header">Wan2.1</div>
+
+                <div class="task-header" data-task="C1">
+                    <div class="task-label">
+                        <span class="task-code">C1</span>
+                        <span class="task-name">Elastic Head-On</span>
+                    </div>
+                    <p class="task-description">Top-down billiards shot: two balls collide perfectly head-on after the cue strike.</p>
+                    <button class="task-play-button" type="button" data-task="C1">Play task</button>
+                </div>
+                <div class="video-cell">
+                    <div class="video-container">
+                        <video data-task="C1" preload="metadata" playsinline muted>
+                            <source src="Physics/Grok/C1_Grok.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="model-name">Grok</div>
+                </div>
+                <div class="video-cell">
+                    <div class="video-container">
+                        <video data-task="C1" preload="metadata" playsinline muted>
+                            <source src="Physics/Sora2/C1_ElasticHeadOn_Sora2.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="model-name">Sora2</div>
+                </div>
+                <div class="video-cell">
+                    <div class="video-container">
+                        <video data-task="C1" preload="metadata" playsinline muted>
+                            <source src="Physics/Veo2/C1_ElasticHeadOn_Veo2.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="model-name">Veo2</div>
+                </div>
+                <div class="video-cell">
+                    <div class="video-container">
+                        <video data-task="C1" preload="metadata" playsinline muted>
+                            <source src="Physics/Veo3/C1_ElasticHeadOn_Veo3.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="model-name">Veo3</div>
+                </div>
+                <div class="video-cell">
+                    <div class="video-container">
+                        <video data-task="C1" preload="metadata" playsinline muted>
+                            <source src="Physics/Wan2.1/C1_ElasticHeadOn_Wan2.1.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="model-name">Wan2.1</div>
+                </div>
+
+                <div class="task-header" data-task="C2">
+                    <div class="task-label">
+                        <span class="task-code">C2</span>
+                        <span class="task-name">Glancing Blow</span>
+                    </div>
+                    <p class="task-description">Offset collision: cue strikes a blue ball that clips a stationary red ball, inducing angled rebounds.</p>
+                    <button class="task-play-button" type="button" data-task="C2">Play task</button>
+                </div>
+                <div class="video-cell">
+                    <div class="video-container">
+                        <video data-task="C2" preload="metadata" playsinline muted>
+                            <source src="Physics/Grok/C2_Grok.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="model-name">Grok</div>
+                </div>
+                <div class="video-cell">
+                    <div class="video-container">
+                        <video data-task="C2" preload="metadata" playsinline muted>
+                            <source src="Physics/Sora2/C2_GlancingBlow_Sora2.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="model-name">Sora2</div>
+                </div>
+                <div class="video-cell">
+                    <div class="video-container">
+                        <video data-task="C2" preload="metadata" playsinline muted>
+                            <source src="Physics/Veo2/C2_GlancingBlow_Veo2.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="model-name">Veo2</div>
+                </div>
+                <div class="video-cell">
+                    <div class="video-container">
+                        <video data-task="C2" preload="metadata" playsinline muted>
+                            <source src="Physics/Veo3/C2_GlancingBlow_Veo3.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="model-name">Veo3</div>
+                </div>
+                <div class="video-cell">
+                    <div class="video-container">
+                        <video data-task="C2" preload="metadata" playsinline muted>
+                            <source src="Physics/Wan2.1/C2_GlancingBlow_Wan2.1.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="model-name">Wan2.1</div>
+                </div>
+
+                <div class="task-header" data-task="C3">
+                    <div class="task-label">
+                        <span class="task-code">C3</span>
+                        <span class="task-name">Tower Topple</span>
+                    </div>
+                    <p class="task-description">Side view of a block tower as a sliding block slams into the base at high speed.</p>
+                    <button class="task-play-button" type="button" data-task="C3">Play task</button>
+                </div>
+                <div class="video-cell">
+                    <div class="video-container">
+                        <video data-task="C3" preload="metadata" playsinline muted>
+                            <source src="Physics/Grok/C3_Grok.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="model-name">Grok</div>
+                </div>
+                <div class="video-cell">
+                    <div class="video-container">
+                        <video data-task="C3" preload="metadata" playsinline muted>
+                            <source src="Physics/Sora2/C3_TowerTopple_Sora2.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="model-name">Sora2</div>
+                </div>
+                <div class="video-cell">
+                    <div class="video-container">
+                        <video data-task="C3" preload="metadata" playsinline muted>
+                            <source src="Physics/Veo2/C3_TowerTopple_Veo2.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="model-name">Veo2</div>
+                </div>
+                <div class="video-cell">
+                    <div class="video-container">
+                        <video data-task="C3" preload="metadata" playsinline muted>
+                            <source src="Physics/Veo3/C3_TowerTopple_Veo3.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="model-name">Veo3</div>
+                </div>
+                <div class="video-cell">
+                    <div class="video-container">
+                        <video data-task="C3" preload="metadata" playsinline muted>
+                            <source src="Physics/Wan2.1/C3_TowerTopple_Wan2.1.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="model-name">Wan2.1</div>
+                </div>
+
+                <div class="task-header" data-task="C4">
+                    <div class="task-label">
+                        <span class="task-code">C4</span>
+                        <span class="task-name">Springs</span>
+                    </div>
+                    <p class="task-description">Metal cart glides into a horizontal spring, compressing it against a rigid wall.</p>
+                    <button class="task-play-button" type="button" data-task="C4">Play task</button>
+                </div>
+                <div class="video-cell">
+                    <div class="video-container">
+                        <video data-task="C4" preload="metadata" playsinline muted>
+                            <source src="Physics/Grok/C4_Grok.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="model-name">Grok</div>
+                </div>
+                <div class="video-cell">
+                    <div class="video-container">
+                        <video data-task="C4" preload="metadata" playsinline muted>
+                            <source src="Physics/Sora2/C4_Springs_Sora2.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="model-name">Sora2</div>
+                </div>
+                <div class="video-cell">
+                    <div class="video-container">
+                        <video data-task="C4" preload="metadata" playsinline muted>
+                            <source src="Physics/Veo2/C4_Springs_Veo2.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="model-name">Veo2</div>
+                </div>
+                <div class="video-cell">
+                    <div class="video-container">
+                        <video data-task="C4" preload="metadata" playsinline muted>
+                            <source src="Physics/Veo3/C4_Springs_Veo3.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="model-name">Veo3</div>
+                </div>
+                <div class="video-cell">
+                    <div class="video-container">
+                        <div class="video-placeholder">Coming Soon</div>
+                    </div>
+                    <div class="model-name">Wan2.1</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="category-section" id="gravity">
+            <div class="category-title">
+                <span class="category-label">Gravity Experiments</span>
+                <p class="category-description">Classic gravity prompts highlighting differences between Earth, Moon, vacuum, and projectile motion.</p>
+            </div>
+            <div class="comparison-grid">
+                <div class="task-header">Task</div>
+                <div class="model-header">Grok</div>
+                <div class="model-header">Sora2</div>
+                <div class="model-header">Veo2</div>
+                <div class="model-header">Veo3</div>
+                <div class="model-header">Wan2.1</div>
+
+                <div class="task-header" data-task="G1">
+                    <div class="task-label">
+                        <span class="task-code">G1</span>
+                        <span class="task-name">Earth Fall</span>
+                    </div>
+                    <p class="task-description">A red rubber ball drops 2 meters under Earth gravity, shot with a static side camera.</p>
+                    <button class="task-play-button" type="button" data-task="G1">Play task</button>
+                </div>
+                <div class="video-cell">
+                    <div class="video-container">
+                        <video data-task="G1" preload="metadata" playsinline muted>
+                            <source src="Physics/Grok/G1_Grok.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="model-name">Grok</div>
+                </div>
+                <div class="video-cell">
+                    <div class="video-container">
+                        <video data-task="G1" preload="metadata" playsinline muted>
+                            <source src="Physics/Sora2/G1_EarthFall_Sora2.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="model-name">Sora2</div>
+                </div>
+                <div class="video-cell">
+                    <div class="video-container">
+                        <video data-task="G1" preload="metadata" playsinline muted>
+                            <source src="Physics/Veo2/G1_EarthFall_Veo2.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="model-name">Veo2</div>
+                </div>
+                <div class="video-cell">
+                    <div class="video-container">
+                        <video data-task="G1" preload="metadata" playsinline muted>
+                            <source src="Physics/Veo3/G1_EarthFall_Veo3.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="model-name">Veo3</div>
+                </div>
+                <div class="video-cell">
+                    <div class="video-container">
+                        <video data-task="G1" preload="metadata" playsinline muted>
+                            <source src="Physics/Wan2.1/G1_EarthFall_Wan2.1.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="model-name">Wan2.1</div>
+                </div>
+
+                <div class="task-header" data-task="G2">
+                    <div class="task-label">
+                        <span class="task-code">G2</span>
+                        <span class="task-name">Moon Fall</span>
+                    </div>
+                    <p class="task-description">Same setup as G1 but at lunar gravity — slower descent and longer hang time.</p>
+                    <button class="task-play-button" type="button" data-task="G2">Play task</button>
+                </div>
+                <div class="video-cell">
+                    <div class="video-container">
+                        <video data-task="G2" preload="metadata" playsinline muted>
+                            <source src="Physics/Grok/G2_Grok.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="model-name">Grok</div>
+                </div>
+                <div class="video-cell">
+                    <div class="video-container">
+                        <video data-task="G2" preload="metadata" playsinline muted>
+                            <source src="Physics/Sora2/G2_MoonFall_Sora2.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="model-name">Sora2</div>
+                </div>
+                <div class="video-cell">
+                    <div class="video-container">
+                        <video data-task="G2" preload="metadata" playsinline muted>
+                            <source src="Physics/Veo2/G2_MoonFall_Veo2.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="model-name">Veo2</div>
+                </div>
+                <div class="video-cell">
+                    <div class="video-container">
+                        <video data-task="G2" preload="metadata" playsinline muted>
+                            <source src="Physics/Veo3/G2_MoonFall_Veo3.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="model-name">Veo3</div>
+                </div>
+                <div class="video-cell">
+                    <div class="video-container">
+                        <video data-task="G2" preload="metadata" playsinline muted>
+                            <source src="Physics/Wan2.1/G2_MoonFall_Wan2.1.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="model-name">Wan2.1</div>
+                </div>
+
+                <div class="task-header" data-task="G3">
+                    <div class="task-label">
+                        <span class="task-code">G3</span>
+                        <span class="task-name">Vacuum Drop</span>
+                    </div>
+                    <p class="task-description">Inside a vacuum chamber, a hammer and feather fall side-by-side with identical acceleration.</p>
+                    <button class="task-play-button" type="button" data-task="G3">Play task</button>
+                </div>
+                <div class="video-cell">
+                    <div class="video-container">
+                        <video data-task="G3" preload="metadata" playsinline muted>
+                            <source src="Physics/Grok/G3_Grok.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="model-name">Grok</div>
+                </div>
+                <div class="video-cell">
+                    <div class="video-container">
+                        <video data-task="G3" preload="metadata" playsinline muted>
+                            <source src="Physics/Sora2/G3_VacuumDrop_Sora2.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="model-name">Sora2</div>
+                </div>
+                <div class="video-cell">
+                    <div class="video-container">
+                        <video data-task="G3" preload="metadata" playsinline muted>
+                            <source src="Physics/Veo2/G3_VacuumDrop_Veo2.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="model-name">Veo2</div>
+                </div>
+                <div class="video-cell">
+                    <div class="video-container">
+                        <video data-task="G3" preload="metadata" playsinline muted>
+                            <source src="Physics/Veo3/G3_VacuumDrop_Veo3.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="model-name">Veo3</div>
+                </div>
+                <div class="video-cell">
+                    <div class="video-container">
+                        <video data-task="G3" preload="metadata" playsinline muted>
+                            <source src="Physics/Wan2.1/G3_VacuumDrop_Wan2.1.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="model-name">Wan2.1</div>
+                </div>
+
+                <div class="task-header" data-task="G4">
+                    <div class="task-label">
+                        <span class="task-code">G4</span>
+                        <span class="task-name">Projectile Arc</span>
+                    </div>
+                    <p class="task-description">A launcher fires a ball that follows a parabolic trajectory before landing on the floor.</p>
+                    <button class="task-play-button" type="button" data-task="G4">Play task</button>
+                </div>
+                <div class="video-cell">
+                    <div class="video-container">
+                        <video data-task="G4" preload="metadata" playsinline muted>
+                            <source src="Physics/Grok/G4_Grok.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="model-name">Grok</div>
+                </div>
+                <div class="video-cell">
+                    <div class="video-container">
+                        <video data-task="G4" preload="metadata" playsinline muted>
+                            <source src="Physics/Sora2/G4_ProjectileArc_Sora2.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="model-name">Sora2</div>
+                </div>
+                <div class="video-cell">
+                    <div class="video-container">
+                        <video data-task="G4" preload="metadata" playsinline muted>
+                            <source src="Physics/Veo2/G4_ProjectileArc_Veo2.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="model-name">Veo2</div>
+                </div>
+                <div class="video-cell">
+                    <div class="video-container">
+                        <video data-task="G4" preload="metadata" playsinline muted>
+                            <source src="Physics/Veo3/G4_ProjectileArc_Veo3.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="model-name">Veo3</div>
+                </div>
+                <div class="video-cell">
+                    <div class="video-container">
+                        <video data-task="G4" preload="metadata" playsinline muted>
+                            <source src="Physics/Wan2.1/G4_ProjectileArc_Wan2.1.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="model-name">Wan2.1</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="task-descriptions">
+            <h2>🧪 Quick Reference</h2>
+            <div class="task-item">
+                <div class="task-title">Models</div>
+                <p class="task-meta">Grok, Sora2, Veo2, Veo3, Wan 2.1 (coming soon: additional Cosmos / Sora variants)</p>
+            </div>
+            <div class="task-item">
+                <div class="task-title">Base Images</div>
+                <p class="task-meta">All base stills live in <code>Physics/*_Base.png</code> and were reused across models for fair start states.</p>
+            </div>
+            <div class="task-item">
+                <div class="task-title">Evaluation Dimensions</div>
+                <p class="task-meta">• Trajectory correctness • Fluid simulation fidelity • Rigid-body contacts • Timing under altered gravity</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const taskButtons = document.querySelectorAll('.task-play-button');
+            const videos = document.querySelectorAll('.video-container video');
+
+            videos.forEach(video => {
+                video.controls = false;
+                video.preload = 'metadata';
+
+                video.addEventListener('click', event => {
+                    if (video.paused) {
+                        video.play().catch(() => {});
+                    } else {
+                        video.pause();
+                    }
+                    event.stopPropagation();
+                });
+            });
+
+            taskButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const taskId = button.dataset.task;
+                    const taskVideos = document.querySelectorAll(`video[data-task="${taskId}"]`);
+
+                    taskVideos.forEach(video => {
+                        video.pause();
+                        video.currentTime = 0;
+                        video.play().catch(err => {
+                            console.warn(`Unable to play video for ${taskId}`, err);
+                        });
+                    });
+
+                    button.textContent = 'Replay task';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
+

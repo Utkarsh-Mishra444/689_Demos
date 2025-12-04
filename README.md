@@ -1,14 +1,16 @@
-# 🤖 Robotics Video Model Comparison - CSCE 689
+# 🤖 CSCE 689 Video Benchmarks
 
-A comprehensive comparison of AI video generation models for robotic manipulation tasks.
+A comprehensive comparison of AI video generation models across two benchmark suites:
+- **Robotics manipulation tasks** (index.html)
+- **Classical physics experiments** (physics.html)
 
 ## 📊 Overview
 
 This project evaluates the performance of various AI video generation models on standardized robotic manipulation tasks. Each model generates videos for 5 distinct robotics scenarios, allowing for side-by-side comparison of visual quality, motion realism, and task completion accuracy.
 
-## 🎯 Tasks
+## 🎯 Robotics Tasks
 
-The benchmark consists of 5 robotic manipulation tasks:
+The robotics benchmark consists of 5 manipulation tasks:
 
 1. **T1: Pour water into mug** - Robot arm picks up bottle and pours into mug
 2. **T2: Place spatula on pan** - Robot arm moves spatula into frying pan
@@ -16,18 +18,28 @@ The benchmark consists of 5 robotic manipulation tasks:
 4. **T4: Lift lid from pot** - Robot arm removes lid from cooking pot
 5. **T5: Push cube to target marker** - Robot arm pushes cube to marked location
 
-## 🤖 Models Compared
+### Models Compared
+- ✅ **Grok**, **Veo2**, **Veo3.1Fast**, **Veo3.1Quality**, **Wan**
+- ⏳ Pending additions: **Sora**, **Cosmos**
 
-### ✅ Completed Models
-- **Grok** - xAI's video generation model
-- **Veo2** - Google's video generation model
-- **Veo3.1Fast** - Google's fast inference variant
-- **Veo3.1Quality** - Google's high-quality variant
-- **Wan** - [Model details pending]
+## ⚛️ Physics Tasks
 
-### ⏳ Pending Models
-- **Sora** - OpenAI's video generation model
-- **Cosmos** - [Model details pending]
+11 analytical physics prompts grouped into buoyancy (B), collisions (C), and gravity (G):
+- **B1 Heavy Sink** – Steel ball sinks in tank
+- **B2 Light Float** – Hollow ball floats to surface
+- **B3 Pop-up** – Submerged block shoots upward
+- **C1 Elastic Head-On** – Perfectly elastic billiard collision
+- **C2 Glancing Blow** – Off-center billiard collision
+- **C3 Tower Topple** – Sliding block knocks over tower
+- **C4 Springs** – Cart compresses spring against wall
+- **G1 Earth Fall** – Ball dropping under Earth gravity
+- **G2 Moon Fall** – Ball drop with lunar gravity
+- **G3 Vacuum Drop** – Hammer & feather fall equally
+- **G4 Projectile Arc** – Launcher fires projectile trajectory
+
+### Models Compared
+- ✅ **Grok**, **Sora2**, **Veo2**, **Veo3**
+- ⚠️ **Wan2.1** (all tasks except Springs currently available)
 
 ## 📁 Project Structure
 
@@ -39,19 +51,23 @@ The benchmark consists of 5 robotic manipulation tasks:
 │   ├── Veo3.1Quality/  # Veo3.1Quality videos (T1-T5_Veo3.1Quality.mp4)
 │   ├── Base_Images/    # Base images for each task (T1-T5_Base.png)
 │   └── For later/      # Additional content
-├── index.html          # GitHub Pages comparison interface
+├── Physics/            # Physics videos, base images, prompts
+├── physics.html        # Physics comparison interface
+├── index.html          # Robotics comparison interface
 ├── README.md           # This file
 └── CSCE 689 Video Prompts - Robotics.csv  # Task definitions and status tracking
 ```
 
-## 🚀 Viewing the Comparison
+## 🚀 Viewing the Comparisons
 
-The interactive comparison interface is available via GitHub Pages. Simply open `index.html` in a web browser to view all videos side-by-side.
+- `index.html` → Robotics manipulator benchmark
+- `physics.html` → Physics experiment benchmark
+Host both via GitHub Pages or open locally with `python3 -m http.server`.
 
 ## 📋 Task Details
 
-Each task includes:
-- **Video Prompt**: Detailed description for video generation
+Each benchmark task includes:
+- **Video Prompt**: Detailed description for video generation (CSV files)
 - **Image Prompt**: Base image generation instructions
 - **Base Images**: Starting visual context for video generation
 
